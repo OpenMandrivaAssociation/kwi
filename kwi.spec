@@ -39,6 +39,8 @@ BuildRequires:	cmake(KF6WindowSystem)
 BuildRequires:	cmake(KF6Parts)
 BuildRequires:	cmake(KF6XmlGui)
 BuildRequires:	cmake(KF6WidgetsAddons)
+# KF5 provides the same unversioned qml(org.kde.kitemmodels) name.
+BuildRequires:	cmake(KF6ItemModels)
 BuildRequires:	cmake(KF6KirigamiAddons) >= 1.11
 BuildRequires:	cmake(KF6KirigamiAppComponents) >= 1.1
 BuildRequires:	pkgconfig(libghostty-vt)
@@ -48,13 +50,12 @@ BuildRequires:	qml(org.kde.kirigami.dialogs)
 BuildRequires:	qml(org.kde.kirigami.delegates)
 BuildRequires:	qml(org.kde.kirigami.actioncollection)
 BuildRequires:	qml(org.kde.kirigamiaddons.settings)
-BuildRequires:	qml(org.kde.kitemmodels)
 BuildRequires:	qml(org.kde.desktop)
 BuildRequires:	qml(org.kde.notification)
 # QML imports are loaded at runtime, not through DT_NEEDED.
-# Qt5 and Qt6 both provide qml(QtQuick.Controls) and qml(QtQuick.Dialogs).
-Requires:	qml(org.kde.kirigamiaddons.settings)
-Requires:	qml(org.kde.kitemmodels)
+# Qt5 and KF5 provide the same unversioned qml() names as Qt6 and KF6.
+Requires:	kirigami-addons >= 1.11
+Requires:	%{mklibname KF6ItemModels} >= 6.29
 Requires:	qml(org.kde.desktop)
 Requires:	%{mklibname Qt6QuickControls2} >= 6.10
 Requires:	%{mklibname Qt6QuickDialogs2} >= 6.10
