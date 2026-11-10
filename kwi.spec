@@ -1,8 +1,8 @@
-%define commit 483d718d779c069a28ec139280d1d6e5e198b94e
+%define commit 8937f4131dc6a218b45f3aa236ce7457905a0a2b
 
 Name:		kwi
 Version:	0.1.0
-Release:	0.20261101.1
+Release:	0.20261109.1
 Summary:	A modern terminal emulator for KDE
 Url:		https://invent.kde.org/utilities/kwi
 # Application: GPL-2.0-only OR GPL-3.0-only.
@@ -14,7 +14,7 @@ BuildSystem:	cmake
 BuildOption:	-DKDE_INSTALL_USE_QT_SYS_PATHS:BOOL=ON
 BuildOption:	-DBUILD_KPART:BOOL=ON
 BuildRequires:	cmake(ECM)
-BuildRequires:	cmake(Qt6Core)
+BuildRequires:	cmake(Qt6Core) >= 6.11
 BuildRequires:	cmake(Qt6Gui)
 BuildRequires:	cmake(Qt6Qml)
 BuildRequires:	cmake(Qt6Quick)
@@ -43,7 +43,12 @@ BuildRequires:	cmake(KF6WidgetsAddons)
 BuildRequires:	cmake(KF6ItemModels)
 BuildRequires:	cmake(KF6KirigamiAddons) >= 1.11
 BuildRequires:	cmake(KF6KirigamiAppComponents) >= 1.1
-BuildRequires:	pkgconfig(libghostty-vt)
+BuildRequires:	pkgconfig(libghostty-vt) >= 1.0
+# KDECMakeSettings turns BUILD_TESTING on. The tests are not installed.
+BuildRequires:	cmake(Qt6Test)
+BuildRequires:	cmake(Qt6QuickTest)
+BuildRequires:	python
+BuildRequires:	%{_bindir}/dbus-run-session
 BuildRequires:	qml(QtQuick.Dialogs)
 BuildRequires:	qml(org.kde.kirigami.forms)
 BuildRequires:	qml(org.kde.kirigami.dialogs)
@@ -57,8 +62,8 @@ BuildRequires:	qml(org.kde.notification)
 Requires:	kirigami-addons >= 1.11
 Requires:	%{mklibname KF6ItemModels} >= 6.29
 Requires:	qml(org.kde.desktop)
-Requires:	%{mklibname Qt6QuickControls2} >= 6.10
-Requires:	%{mklibname Qt6QuickDialogs2} >= 6.10
+Requires:	%{mklibname Qt6QuickControls2} >= 6.11
+Requires:	%{mklibname Qt6QuickDialogs2} >= 6.11
 
 %description
 Kwi is a terminal emulator for KDE Plasma and other desktops. It is
