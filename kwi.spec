@@ -1,8 +1,8 @@
-%define commit 8937f4131dc6a218b45f3aa236ce7457905a0a2b
+%define commit e468c2d514e662554779323af46179e4773dd96e
 
 Name:		kwi
 Version:	0.1.0
-Release:	0.20261109.1
+Release:	0.20261117.1
 Summary:	A modern terminal emulator for KDE
 Url:		https://invent.kde.org/utilities/kwi
 # Application: GPL-2.0-only OR GPL-3.0-only.
@@ -36,6 +36,8 @@ BuildRequires:	cmake(KF6Pty)
 BuildRequires:	cmake(KF6KIO)
 BuildRequires:	cmake(KF6Notifications)
 BuildRequires:	cmake(KF6WindowSystem)
+BuildRequires:	cmake(KF6ColorScheme)
+BuildRequires:	cmake(KF6IconThemes)
 BuildRequires:	cmake(KF6Parts)
 BuildRequires:	cmake(KF6XmlGui)
 BuildRequires:	cmake(KF6WidgetsAddons)
@@ -43,7 +45,7 @@ BuildRequires:	cmake(KF6WidgetsAddons)
 BuildRequires:	cmake(KF6ItemModels)
 BuildRequires:	cmake(KF6KirigamiAddons) >= 1.11
 BuildRequires:	cmake(KF6KirigamiAppComponents) >= 1.1
-BuildRequires:	pkgconfig(libghostty-vt) >= 1.0
+BuildRequires:	pkgconfig(libghostty-vt) >= 1.0.1
 # KDECMakeSettings turns BUILD_TESTING on. The tests are not installed.
 BuildRequires:	cmake(Qt6Test)
 BuildRequires:	cmake(Qt6QuickTest)
@@ -57,6 +59,7 @@ BuildRequires:	qml(org.kde.kirigami.actioncollection)
 BuildRequires:	qml(org.kde.kirigamiaddons.settings)
 BuildRequires:	qml(org.kde.desktop)
 BuildRequires:	qml(org.kde.notification)
+BuildRequires:	qml(Qt.labs.platform)
 # QML imports are loaded at runtime, not through DT_NEEDED.
 # Qt5 and KF5 provide the same unversioned qml() names as Qt6 and KF6.
 Requires:	kirigami-addons >= 1.11
@@ -64,6 +67,7 @@ Requires:	%{mklibname KF6ItemModels} >= 6.29
 Requires:	qml(org.kde.desktop)
 Requires:	%{mklibname Qt6QuickControls2} >= 6.11
 Requires:	%{mklibname Qt6QuickDialogs2} >= 6.11
+Requires:	%{mklibname Qt6LabsPlatform} >= 6.11
 
 %description
 Kwi is a terminal emulator for KDE Plasma and other desktops. It is
@@ -73,8 +77,9 @@ be embedded through a QML module or a KPart.
 %install -a
 # No public headers are installed, so the linker symlink is unused.
 rm -f %{buildroot}%{_libdir}/libkwi-terminal.so
+%find_lang %{name} --all-name
 
-%files
+%files -f %{name}.lang
 %{_bindir}/kwi
 # The terminal library is only used by Kwi and its KPart.
 %{_libdir}/libkwi-terminal.so.0.1.0
