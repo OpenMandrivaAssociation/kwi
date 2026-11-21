@@ -1,8 +1,8 @@
-%define commit e468c2d514e662554779323af46179e4773dd96e
+%define commit 352a3c1943b8c7427653c2803e70e2f343b6288a
 
 Name:		kwi
-Version:	0.1.0
-Release:	0.20261117.1
+Version:	0.1.80
+Release:	0.20261121.1
 Summary:	A modern terminal emulator for KDE
 Url:		https://invent.kde.org/utilities/kwi
 # Application: GPL-2.0-only OR GPL-3.0-only.
@@ -77,12 +77,16 @@ be embedded through a QML module or a KPart.
 %install -a
 # No public headers are installed, so the linker symlink is unused.
 rm -f %{buildroot}%{_libdir}/libkwi-terminal.so
+# CMake no longer installs these. Upstream leaves that to packaging.
+mkdir -p %{buildroot}%{_datadir}/licenses/%{name}
+install -m 644 LICENSES/* %{buildroot}%{_datadir}/licenses/%{name}/
 %find_lang %{name} --all-name
 
 %files -f %{name}.lang
 %{_bindir}/kwi
 # The terminal library is only used by Kwi and its KPart.
-%{_libdir}/libkwi-terminal.so.0.1.0
+# SOVERSION is the CMake project version.
+%{_libdir}/libkwi-terminal.so.%{version}
 %{_qtdir}/qml/org/kde/kwi
 %{_qtdir}/plugins/kf6/parts/kwipart.so
 %{_datadir}/applications/org.kde.kwi.desktop
