@@ -1,0 +1,51 @@
+--- a/libs/ghostty-qt/src/Terminal.cpp
++++ b/libs/ghostty-qt/src/Terminal.cpp
+@@ -1259,6 +1259,18 @@
+         }
+     }
+ 
++    // Ghostty's default boundaries include ':', so a double-click on
++    // "https://lindev.ch/" selects "//lindev.ch/". Drop the colon, matching
++    // Konsole's default word characters. Brackets stay boundaries.
++    if (input.type != SelectionEvent::Type::Release) {
++        // Ghostty default_word_boundaries, without ':'. 0x2502 is U+2502.
++        static constexpr std::array<uint32_t, 19> wordBoundaries{
++            0, ' ', '\t', '\'', '"', 0x2502, '`', '|', ';', ',', '(', ')', '[', ']', '{', '}', '<', '>', '$',
++        };
++        const GhosttyCodepoints boundaries{wordBoundaries.data(), wordBoundaries.size()};
++        ghostty_selection_gesture_event_set(event, GHOSTTY_SELECTION_GESTURE_EVENT_OPT_WORD_BOUNDARY_CODEPOINTS, &boundaries);
++    }
++
+     GhosttyTerminalScrollbar before{};
+ 
+     if (input.type == SelectionEvent::Type::Autoscroll)
+--- a/libs/ghostty-qt/autotests/terminaltest.cpp
++++ b/libs/ghostty-qt/autotests/terminaltest.cpp
+@@ -299,6 +299,27 @@
+         QVERIFY(terminal.selectionText().isEmpty());
+     }
+ 
++    // ':' stays inside a word, so a double-click selects a whole URL.
++    void urlWordSelection()
++    {
++        Terminal terminal{40, 2};
++        QVERIFY(terminal.resize(40, 2, {10, 20}));
++        terminal.feed("see https://lindev.ch/ now");
++        // Column 10 is the first '/' of "https://".
++        QVERIFY(clickSelection(terminal, {10, 0}, 2));
++        QCOMPARE(terminal.selectionText(), QStringLiteral("https://lindev.ch/"));
++        QVERIFY(clickSelection(terminal, {4, 0}, 2));
++        QCOMPARE(terminal.selectionText(), QStringLiteral("https://lindev.ch/"));
++        QVERIFY(gesture(terminal, SelectionEvent::Type::Drag, {23, 0}));
++        QCOMPARE(terminal.selectionText(), QStringLiteral("https://lindev.ch/ now"));
++
++        Terminal location{20, 1};
++        QVERIFY(location.resize(20, 1, {10, 20}));
++        location.feed("file.cpp:42");
++        QVERIFY(clickSelection(location, {0, 0}, 2));
++        QCOMPARE(location.selectionText(), QStringLiteral("file.cpp:42"));
++    }
++
+     // Enabled terminal modes determine encoded key, focus, paste and mouse input and supported query replies.
+     void inputAndQueries()
+     {

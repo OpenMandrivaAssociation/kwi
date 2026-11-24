@@ -1,8 +1,8 @@
-%define commit 352a3c1943b8c7427653c2803e70e2f343b6288a
+%define commit d9b8ca49f33e0518912ae185d460e41c43bf0020
 
 Name:		kwi
 Version:	0.1.80
-Release:	0.20261121.1
+Release:	0.20261124.1
 Summary:	A modern terminal emulator for KDE
 Url:		https://invent.kde.org/utilities/kwi
 # Application: GPL-2.0-only OR GPL-3.0-only.
@@ -10,6 +10,10 @@ Url:		https://invent.kde.org/utilities/kwi
 License:	(GPL-2.0-only OR GPL-3.0-only) AND (LGPL-2.1-only OR LGPL-3.0-only)
 Group:		Graphical desktop/KDE
 Source0:	https://invent.kde.org/utilities/kwi/-/archive/%{commit}/kwi-%{commit}.tar.gz
+# Ghostty's default word boundaries include ':', so a double-click selects
+# "//lindev.ch/" out of "https://lindev.ch/". Treat ':' as a word character,
+# matching Konsole.
+Patch0:	kwi-select-whole-url.patch
 BuildSystem:	cmake
 BuildOption:	-DKDE_INSTALL_USE_QT_SYS_PATHS:BOOL=ON
 BuildOption:	-DBUILD_KPART:BOOL=ON
